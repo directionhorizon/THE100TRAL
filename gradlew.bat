@@ -1,7 +1,4 @@
 @echo off
-set JAVA_HOME=D:\android studio\jbr
-set ANDROID_USER_HOME=D:\android_home
-set GRADLE_USER_HOME=D:\gradle_cache_100tral
 @rem Copyright 2015 the original author or authors.
 @rem
 @rem Licensed under the Apache License, Version 2.0 (the "License");

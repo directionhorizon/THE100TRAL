@@ -12,10 +12,10 @@ This plan outlines the integration of the Tavily.ai API into the THE100TRAL plat
 
 ### Core Services
 
-#### [NEW] [TavilyService.kt](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/app/src/main/java/com/example/the100tral/core/network/TavilyService.kt)
+#### [NEW] [TavilyService.kt](./app/src/main/java/com/example/the100tral/core/network/TavilyService.kt)
 Create a network service using OkHttp to interface with Tavily API (Search, Context, and Q&A endpoints).
 
-#### [MODIFY] [MainActivity.kt](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/app/src/main/java/com/example/the100tral/app/src/main/java/com/example/the100tral/MainActivity.kt)
+#### [MODIFY] [MainActivity.kt](./app/src/main/java/com/example/the100tral/app/src/main/java/com/example/the100tral/MainActivity.kt)
 - Register the `TAVILY_API_KEY` in `SecureSecretStore`.
 - Instantiate `TavilyService`.
 - Register the new `TavilySearchTool`.
@@ -24,23 +24,23 @@ Create a network service using OkHttp to interface with Tavily API (Search, Cont
 
 ### Tools & Agents
 
-#### [NEW] [TavilySearchTool.kt](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/app/src/main/java/com/example/the100tral/core/tool/impl/TavilySearchTool.kt)
+#### [NEW] [TavilySearchTool.kt](./app/src/main/java/com/example/the100tral/core/tool/impl/TavilySearchTool.kt)
 A new tool that agents can use to perform web searches, extract content, and perform research.
 
-#### [MODIFY] [SocialListeningTool.kt](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/app/src/main/java/com/example/the100tral/core/tool/impl/SocialListeningTool.kt)
+#### [MODIFY] [SocialListeningTool.kt](./app/src/main/java/com/example/the100tral/core/tool/impl/SocialListeningTool.kt)
 Replace the simulated sentiment analysis with real-time web scanning using Tavily.
 
-#### [MODIFY] [AcademicAgent.kt](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/app/src/main/java/com/example/the100tral/platform/departments/academic/AcademicAgent.kt)
+#### [MODIFY] [AcademicAgent.kt](./app/src/main/java/com/example/the100tral/platform/departments/academic/AcademicAgent.kt)
 Integrate the `TavilySearchTool` to allow the agent to perform real "State of the Art" research instead of just simulation.
 
-#### [MODIFY] [SocialMediaAgent.kt](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/app/src/main/java/com/example/the100tral/platform/departments/marketing/sub/SocialMediaAgent.kt)
+#### [MODIFY] [SocialMediaAgent.kt](./app/src/main/java/com/example/the100tral/platform/departments/marketing/sub/SocialMediaAgent.kt)
 Allow the agent to use Tavily for trend detection and brand monitoring.
 
 ---
 
 ### Infrastructure (Agent Skills)
 
-#### [NEW] [tavily_setup.sh](file:///D:/android studio/AndroidStudioProjects/THE100TRAL/.artifacts/a2fe757c-cfd8-4091-b42a-10efd03c2545/scratch/tavily_setup.sh)
+#### [NEW] [tavily_setup.sh](./.artifacts/a2fe757c-cfd8-4091-b42a-10efd03c2545/scratch/tavily_setup.sh)
 A scratch script to automate the CLI and Skills setup on the host machine if the environment permits.
 
 ## Verification Plan
