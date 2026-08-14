@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821278445299",
+    "project_id": "com-example-the100tral-66bff",
+    "storage_bucket": "com-example-the100tral-66bff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821278445299:android:24425a5dbed5e6147cf186",
+        "android_client_info": {
+          "package_name": "com.example.the100tral"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuoANvjbV2nRCekqvPCUgOHnPzX3QZKZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
