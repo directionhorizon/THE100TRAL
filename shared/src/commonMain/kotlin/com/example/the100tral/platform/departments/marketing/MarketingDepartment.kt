@@ -1,22 +1,20 @@
 package com.example.the100tral.platform.departments.marketing
 
 import com.example.the100tral.core.contract.*
-import kotlinx.coroutines.delay
-
 import com.example.the100tral.core.ai.LLMService
 import com.example.the100tral.core.persistence.MemoryStorage
 
 /**
- * Département Marketing Multi-canal.
- * Niveau 3 : Orchestrateur pour le Niveau 4.
+ * Département Marketing - VERSION RESTAURÉE.
+ * Orchestre les campagnes, les réseaux sociaux et la réputation digitale.
  */
 class MarketingDepartment(
     private val commandChain: BaseAgent,
     llmService: LLMService? = null,
     memoryStorage: MemoryStorage? = null
 ) : BaseAgent(llmService, memoryStorage) {
-
-    override val name: String = "Département Marketing Multi-canal"
+    
+    override val name: String = "Pôle Marketing"
     override val authorityLevel: Int = 3
     override val domain: String = "MARKETING"
 
@@ -24,22 +22,18 @@ class MarketingDepartment(
 
     fun registerSubAgent(domain: String, agent: BaseAgent) {
         subAgents[domain] = agent
-        log("Sous-agent Niveau 4 enregistré : $domain")
+        log("Agent marketing enregistré : $domain")
     }
 
     override suspend fun dispatch(command: Command) {
-        log("Analyse de la demande marketing. Délégation aux experts...")
-        subAgents.values.forEach { agent ->
-            agent.dispatch(command)
-        }
+        log("Lancement de stratégie marketing : ${command.instruction}")
+        
+        // Délégation automatique aux sous-agents (Social Media, Reputation, etc.)
+        subAgents.values.forEach { it.dispatch(command) }
     }
 
     override suspend fun report(result: Report) {
-        log("Rapport reçu d'un expert marketing. Transmission au Chef de Projet.")
+        log("Analyse du livrable marketing : ${result.commandId}")
         commandChain.report(result)
     }
 }
-
-
-
-

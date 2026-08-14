@@ -19,6 +19,7 @@ import com.example.the100tral.platform.departments.marketing.MarketingDepartment
 import com.example.the100tral.platform.departments.marketing.sub.*
 import com.example.the100tral.platform.departments.culture.CultureIntelligenceDepartment
 import com.example.the100tral.platform.departments.finance.FinancialDepartment
+import com.example.the100tral.platform.departments.finance.sub.*
 import com.example.the100tral.platform.departments.commercial.CommercialDepartment
 import com.example.the100tral.platform.departments.sales.sub.*
 import com.example.the100tral.platform.departments.academic.AcademicAgent
@@ -26,6 +27,7 @@ import com.example.the100tral.platform.departments.visual.VisualStudioDepartment
 import com.example.the100tral.platform.orchestration.SuperOrchestrator
 import com.example.the100tral.core.persistence.MemoryStorage
 import com.example.the100tral.core.ai.LLMService
+import com.example.the100tral.core.ai.providers.GeminiProvider
 import com.example.the100tral.core.ai.providers.LocalLLMProvider
 import com.example.the100tral.core.persistence.CloudBridgeProvider
 import com.example.the100tral.core.security.AndroidContext
@@ -43,91 +45,71 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         
-        // Initialisation de Firebase
+        // 1. Initialisation de Firebase & Cloud
         FirebaseApp.initializeApp(this)
-        
-        // Initialisation du contexte Android pour les modules partagés
         AndroidContext.context = this
         
-        // Liaison du moniteur d'activité au Cloud Firebase (Automatisé et Ordonné)
         ThoughtMonitor.setPersistenceListener {
             CloudBridgeProvider.saveThought(it.agentName, it.domain, it.message)
         }
-
-        // Lancement du Pont Cloud (Migration et Indexation)
         CloudBridgeProvider.migrateAll()
         
-        // Initialisation des Services Core
+        // 2. Initialisation des Services IA
         val secretStore = SecureSecretStore()
-        
-        // Injection des clés fournies par l'utilisateur (Sauvegarde sécurisée)
         secretStore.saveSecret("GEMINI_API_KEY", "AIzaSyBJVF0UXd2ui4XH9n3JaYZznRhc41LbuxU")
         secretStore.saveSecret("NOTION_API_KEY", "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")
         secretStore.saveSecret("TAVILY_API_KEY", "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")
         
         val llmService = LLMService()
+        llmService.registerProvider("GEMINI", GeminiProvider(secretStore.getSecret("GEMINI_API_KEY")!!), isDefault = true)
+        
         val memoryStorage = MemoryStorage()
         val emailService = EmailService()
-        
-        // Utilisation immédiate de Gemini Flash avec la nouvelle clé
-        llmService.registerProvider("GEMINI", com.example.the100tral.core.ai.providers.GeminiProvider("AIzaSyBJVF0UXd2ui4XH9n3JaYZznRhc41LbuxU"), isDefault = true)
-        
-        // On garde le local en secours
-        llmService.registerProvider("LOCAL_1", LocalLLMProvider("Llama-3-Local", "http://10.0.2.2:11434"))
-        
-        // Outils
+        val tavilyService = TavilyService(secretStore.getSecret("TAVILY_API_KEY")!!)
+
+        // 3. Initialisation des Outils
         val fileTool = FileCreationTool()
         val buildTool = BuildTool()
-        
-        val notionKey = secretStore.getSecret("NOTION_API_KEY") ?: "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"
-        val notionTool = NotionConnectorTool(notionKey)
-        
+        val notionTool = NotionConnectorTool(secretStore.getSecret("NOTION_API_KEY")!!)
         val tiktokTool = TikTokTrendTool()
-        
-        // Tavily Setup
-        val tavilyKey = secretStore.getSecret("TAVILY_API_KEY") ?: "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"
-        val tavilyService = TavilyService(tavilyKey)
         val tavilyTool = TavilySearchTool(tavilyService)
-        val socialListeningTool = SocialListeningTool(tavilyService)
-        
-        // Nouveaux outils spécialisés (AJOUTS)
-        val arxivTool = ArXivTool(tavilyService)
-        val congoTool = LocalIntelligenceTool(tavilyService)
+        val emailTool = SendEmailTool(emailService)
         val financialTool = FinancialAnalyzerTool()
         val sheetsTool = GoogleSheetsTool()
+        val arxivTool = ArXivTool(tavilyService)
 
-        // 1. Initialisation de la Hiérarchie (Chef de Projet Unique)
+        // 4. Initialisation de la Hiérarchie (Niveau 1 & 2)
         val superOrchestrator = SuperOrchestrator(llmService, memoryStorage)
         val projectManager = ProjectManager(superOrchestrator, llmService, memoryStorage)
         val executiveAssistant = ExecutiveAssistant(projectManager, llmService, memoryStorage)
+        val crisisArbitrator = CrisisArbitrator(projectManager, llmService, memoryStorage)
 
-        // Pôle Produit (Utilise Android Studio en interne pour l'exécution)
+        // 5. Initialisation des Départements (Niveau 3)
         val productDept = ProductDevelopmentDepartment(projectManager, llmService, memoryStorage)
-        val frontendAgent = FrontendAgent(productDept, llmService, memoryStorage)
-        val backendAgent = BackendAgent(productDept, llmService, memoryStorage)
-        backendAgent.registerTool(fileTool)
-        val devOpsAgent = DevOpsAgent(productDept, llmService, memoryStorage)
-        devOpsAgent.registerTool(buildTool)
-        
-        // Pôle Marketing & Créa (Utilise Visual Studio en interne via des requêtes ciblées)
         val marketingDept = MarketingDepartment(projectManager, llmService, memoryStorage)
-        val socialMediaAgent = SocialMediaAgent(marketingDept, llmService, memoryStorage)
-        val reputationAgent = DigitalReputationAgent(marketingDept, llmService, memoryStorage)
-        socialMediaAgent.registerTool(tiktokTool)
-        
-        // Pôle Commercial (Regroupe les Sales et la Relation Client)
         val commercialDept = CommercialDepartment(projectManager, llmService, memoryStorage)
-        val leadHunter = LeadHunter(commercialDept, llmService, memoryStorage)
-        val customerSuccess = CustomerSuccessAgent(commercialDept, llmService, memoryStorage)
-        customerSuccess.registerTool(SendEmailTool(emailService))
-
-        // Autres Pôles de connaissance
         val financeDept = FinancialDepartment(projectManager, llmService, memoryStorage)
-        val cultureDept = CultureIntelligenceDepartment(projectManager, llmService, memoryStorage)
-        val academicAgent = AcademicAgent(projectManager, llmService, memoryStorage)
+        val academicAgent = AcademicAgent(projectManager, memoryStorage, llmService)
         val visualDept = VisualStudioDepartment(projectManager, llmService, memoryStorage)
 
-        // 2. Configuration (Structure organisationnelle pure)
+        // 6. Enregistrement des Sous-Agents (Niveau 4)
+        productDept.registerSubAgent("FRONTEND", FrontendAgent(productDept, llmService, memoryStorage))
+        val backend = BackendAgent(productDept, llmService, memoryStorage)
+        backend.registerTool(fileTool)
+        productDept.registerSubAgent("BACKEND", backend)
+        val devOps = DevOpsAgent(productDept, llmService, memoryStorage)
+        devOps.registerTool(buildTool)
+        productDept.registerSubAgent("DEVOPS", devOps)
+        
+        marketingDept.registerSubAgent("SOCIAL_MEDIA", SocialMediaAgent(marketingDept, llmService, memoryStorage))
+        
+        commercialDept.registerSubAgent("CUSTOMER_CARE", CustomerSuccessAgent(commercialDept, llmService, memoryStorage))
+        commercialDept.registerSubAgent("LEADS", LeadHunter(commercialDept, llmService, memoryStorage))
+        
+        financeDept.registerSubAgent("AUDIT", AuditAgent(financeDept, llmService, memoryStorage))
+        financeDept.registerSubAgent("ROI", ROIAgent(financeDept, llmService, memoryStorage))
+
+        // 7. Raccordement Global
         superOrchestrator.setProjectManager(projectManager)
         superOrchestrator.setExecutiveAssistant(executiveAssistant)
         
@@ -135,36 +117,14 @@ class MainActivity : ComponentActivity() {
         projectManager.registerDepartment("MARKETING", marketingDept)
         projectManager.registerDepartment("COMMERCIAL", commercialDept)
         projectManager.registerDepartment("FINANCE", financeDept)
-        projectManager.registerDepartment("WATCH_CULTURE", cultureDept)
         projectManager.registerDepartment("ACADEMIC", academicAgent)
         projectManager.registerDepartment("VISUAL_STUDIO", visualDept)
         
-        // Enregistrement des outils spécialisés aux agents concernés (AJOUTS)
+        // Distribution des outils stratégiques
         academicAgent.registerTool(arxivTool)
-        cultureDept.registerTool(congoTool)
-        financeDept.registerTool(financialTool)
-        financeDept.registerTool(sheetsTool)
-        
-        // Enregistrement des outils de rapportage global
+        academicAgent.registerTool(tavilyTool)
         projectManager.registerTool(notionTool)
         superOrchestrator.registerTool(notionTool)
-        superOrchestrator.registerTool(sheetsTool)
-        
-        // Enregistrement des sous-agents d'exécution
-        productDept.registerSubAgent("FRONTEND", frontendAgent)
-        productDept.registerSubAgent("BACKEND", backendAgent)
-        productDept.registerSubAgent("DEVOPS", devOpsAgent)
-        
-        marketingDept.registerSubAgent("SOCIAL_MEDIA", socialMediaAgent)
-        marketingDept.registerSubAgent("DIGITAL_PR", reputationAgent)
-        
-        socialMediaAgent.registerTool(tavilyTool)
-        academicAgent.registerTool(tavilyTool)
-        reputationAgent.registerTool(tavilyTool)
-        reputationAgent.registerTool(socialListeningTool)
-        
-        commercialDept.registerSubAgent("LEADS", leadHunter)
-        commercialDept.registerSubAgent("CUSTOMER_CARE", customerSuccess)
 
         val server = MainServer(superOrchestrator)
 
@@ -181,7 +141,7 @@ class MainActivity : ComponentActivity() {
                                 server.handleUserRequest(request = command, domain = "GLOBAL")
                             }
                         }
-                    ) { /* ... */ }
+                    ) { /* Navigation mobile */ }
                 }
             }
         }
