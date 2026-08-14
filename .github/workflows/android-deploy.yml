@@ -21,7 +21,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew :app:assembleDebug
+      run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
     - name: Upload to Firebase App Distribution
       uses: w9jds/firebase-action@master
