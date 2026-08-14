@@ -1,7 +1,8 @@
 package com.example.the100tral.core.persistence
 
 /**
- * Le Pont Cloud : Indexe les fichiers locaux critiques et assure leur migration vers Firebase.
+ * Le Pont Cloud : Indexe les fichiers locaux et assure leur migration.
+ * Corrigé pour fonctionner aussi bien sur PC que dans le Cloud.
  */
 object CloudBridge {
 
@@ -12,25 +13,19 @@ object CloudBridge {
         val description: String
     )
 
-    // Liste des fichiers "Bons pour indexation" identifiés sur D:\android studio
+    // Utilisation de chemins relatifs pour être compatible avec GitHub Actions (Linux)
     private val indexRegistry = listOf(
         MigrationTask(
             id = "PROJECT_CORE",
-            localPath = "D:/android studio/AndroidStudioProjects/THE100TRAL/shared",
+            localPath = "./shared", 
             targetCollection = "project_structure",
-            description = "Code source partagé (Logique des agents)"
-        ),
-        MigrationTask(
-            id = "FUNCTIONAL_HISTORY",
-            localPath = "D:/android studio/studio/agent/conversations",
-            targetCollection = "functional_activity",
-            description = "Historique des interactions et décisions de conception"
+            description = "Code source partagé"
         ),
         MigrationTask(
             id = "AGENT_MEMORY",
-            localPath = "D:/android studio/AndroidStudioProjects/THE100TRAL/platform_knowledge_base.txt",
+            localPath = "./platform_knowledge_base.txt",
             targetCollection = "platform_memory",
-            description = "Base de connaissance capitalisée"
+            description = "Base de connaissance"
         )
     )
 
