@@ -8,3 +8,5 @@ plugins {
     alias(libs.plugins.google.gms.google.services) apply false
     alias(libs.plugins.firebase.appdistribution) apply false
 }
+
+# FORCE CLOUD SYNC: 2026-08-14
