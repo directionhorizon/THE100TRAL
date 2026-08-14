@@ -51,6 +51,7 @@ generativeai = { group = "com.google.ai.client.generativeai", name = "generative
 firebase-ai = { group = "com.google.firebase", name = "firebase-ai", version.ref = "firebaseAi" }
 firebaseAuth = { group = "com.google.firebase", name = "firebase-auth-ktx", version = "23.2.1" }
 firebaseFirestore = { group = "com.google.firebase", name = "firebase-firestore-ktx", version = "25.1.1" }
+firebaseStorage = { group = "com.google.firebase", name = "firebase-storage-ktx", version = "21.0.1" }
 googleId = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version = "1.1.1" }
 androidxCredentials = { group = "androidx.credentials", name = "credentials", version = "1.2.2" }
 androidxCredentialsPlay = { group = "androidx.credentials", name = "credentials-play-services-auth", version = "1.2.2" }

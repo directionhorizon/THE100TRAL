@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
         val financialTool = FinancialAnalyzerTool()
         val sheetsTool = GoogleSheetsTool()
         val arxivTool = ArXivTool(tavilyService)
+        val cloudUploader = CloudFileUploader() // L'outil de libération d'espace
 
         // 4. Initialisation de la Hiérarchie (Niveau 1 & 2)
         val superOrchestrator = SuperOrchestrator(llmService, memoryStorage)
@@ -92,24 +93,48 @@ class MainActivity : ComponentActivity() {
         val academicAgent = AcademicAgent(projectManager, memoryStorage, llmService)
         val visualDept = VisualStudioDepartment(projectManager, llmService, memoryStorage)
 
-        // 6. Enregistrement des Sous-Agents (Niveau 4)
-        productDept.registerSubAgent("FRONTEND", FrontendAgent(productDept, llmService, memoryStorage))
+        // 6. Création et Armement des Sous-Agents (Niveau 4)
+        val frontend = FrontendAgent(productDept, llmService, memoryStorage)
         val backend = BackendAgent(productDept, llmService, memoryStorage)
-        backend.registerTool(fileTool)
-        productDept.registerSubAgent("BACKEND", backend)
         val devOps = DevOpsAgent(productDept, llmService, memoryStorage)
-        devOps.registerTool(buildTool)
-        productDept.registerSubAgent("DEVOPS", devOps)
-        
-        marketingDept.registerSubAgent("SOCIAL_MEDIA", SocialMediaAgent(marketingDept, llmService, memoryStorage))
-        
-        commercialDept.registerSubAgent("CUSTOMER_CARE", CustomerSuccessAgent(commercialDept, llmService, memoryStorage))
-        commercialDept.registerSubAgent("LEADS", LeadHunter(commercialDept, llmService, memoryStorage))
-        
-        financeDept.registerSubAgent("AUDIT", AuditAgent(financeDept, llmService, memoryStorage))
-        financeDept.registerSubAgent("ROI", ROIAgent(financeDept, llmService, memoryStorage))
+        val socialMedia = SocialMediaAgent(marketingDept, llmService, memoryStorage)
+        val customerCare = CustomerSuccessAgent(commercialDept, llmService, memoryStorage)
+        val leads = LeadHunter(commercialDept, llmService, memoryStorage)
+        val audit = AuditAgent(financeDept, llmService, memoryStorage)
+        val roi = ROIAgent(financeDept, llmService, memoryStorage)
 
-        // 7. Raccordement Global
+        // --- ENREGISTREMENT GLOBAL DU CLOUD UPLOADER ---
+        listOf(
+            superOrchestrator, projectManager, executiveAssistant, crisisArbitrator,
+            productDept, marketingDept, commercialDept, financeDept, academicAgent, visualDept,
+            frontend, backend, devOps, socialMedia, customerCare, leads, audit, roi
+        ).forEach { agent -> 
+            agent.registerTool(cloudUploader) 
+        }
+
+        // --- ENREGISTREMENT DES OUTILS SPÉCIFIQUES ---
+        backend.registerTool(fileTool)
+        devOps.registerTool(buildTool)
+        socialMedia.registerTool(tiktokTool)
+        socialMedia.registerTool(tavilyTool)
+        customerCare.registerTool(emailTool)
+        audit.registerTool(financialTool)
+        leads.registerTool(tavilyTool)
+        academicAgent.registerTool(arxivTool)
+        academicAgent.registerTool(tavilyTool)
+        projectManager.registerTool(notionTool)
+        superOrchestrator.registerTool(notionTool)
+
+        // 7. Raccordement Structurel
+        productDept.registerSubAgent("FRONTEND", frontend)
+        productDept.registerSubAgent("BACKEND", backend)
+        productDept.registerSubAgent("DEVOPS", devOps)
+        marketingDept.registerSubAgent("SOCIAL_MEDIA", socialMedia)
+        commercialDept.registerSubAgent("CUSTOMER_CARE", customerCare)
+        commercialDept.registerSubAgent("LEADS", leads)
+        financeDept.registerSubAgent("AUDIT", audit)
+        financeDept.registerSubAgent("ROI", roi)
+
         superOrchestrator.setProjectManager(projectManager)
         superOrchestrator.setExecutiveAssistant(executiveAssistant)
         
@@ -119,12 +144,6 @@ class MainActivity : ComponentActivity() {
         projectManager.registerDepartment("FINANCE", financeDept)
         projectManager.registerDepartment("ACADEMIC", academicAgent)
         projectManager.registerDepartment("VISUAL_STUDIO", visualDept)
-        
-        // Distribution des outils stratégiques
-        academicAgent.registerTool(arxivTool)
-        academicAgent.registerTool(tavilyTool)
-        projectManager.registerTool(notionTool)
-        superOrchestrator.registerTool(notionTool)
 
         val server = MainServer(superOrchestrator)
 

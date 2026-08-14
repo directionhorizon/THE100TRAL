@@ -5,7 +5,7 @@ import com.example.the100tral.core.security.SecurityGuard
 /**
  * Routeur intelligent entre les différents fournisseurs de LLM.
  */
-class LLMService {
+open class LLMService {
 
     private val providers = mutableMapOf<String, ILLMProvider>()
     private var defaultProvider: String? = null

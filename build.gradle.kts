@@ -9,4 +9,4 @@ plugins {
     alias(libs.plugins.firebase.appdistribution) apply false
 }
 
-# FORCE CLOUD SYNC: 2026-08-14
+// FORCE CLOUD SYNC: 2026-08-14

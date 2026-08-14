@@ -32,6 +32,13 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutines.test) // For runBlocking in common tests
+            }
+        }
+        
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
         
@@ -41,6 +48,7 @@ kotlin {
                 implementation(libs.androidx.security.crypto)
                 implementation(libs.firebaseAuth)
                 implementation(libs.firebaseFirestore)
+                implementation(libs.firebaseStorage)
                 implementation(libs.generativeai)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
             }
