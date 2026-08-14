@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -32,13 +31,7 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.coroutines.test) // For runBlocking in common tests
-            }
-        }
-        
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
             }
         }
         
@@ -46,6 +39,7 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.security.crypto)
+                // Firebase RESTRICTED TO ANDROID ONLY
                 implementation(libs.firebaseAuth)
                 implementation(libs.firebaseFirestore)
                 implementation(libs.firebaseStorage)
