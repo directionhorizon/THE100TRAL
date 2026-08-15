@@ -1,4 +1,6 @@
 @echo off
+set JAVA_HOME=D:\android studio\jbr
+set JAVA_EXE=D:\android studio\jbr\bin\java.exe
 @rem Copyright 2015 the original author or authors.
 @rem
 @rem Licensed under the Apache License, Version 2.0 (the "License");
