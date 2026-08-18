@@ -6,7 +6,7 @@ import com.example.the100tral.core.persistence.MemoryStorage
 
 /**
  * Agent de Communication de Crise (Niveau 4).
- * Protège l'image de marque et gère les relations publiques digitales.
+ * Prota�¨ge l'image de marque et ga�¨re les relations publiques digitales.
  */
 class DigitalReputationAgent(
     private val commandChain: BaseAgent,
@@ -14,19 +14,17 @@ class DigitalReputationAgent(
     memoryStorage: MemoryStorage? = null
 ) : BaseAgent(llmService, memoryStorage) {
 
-    override val name: String = "Agent Réputation & Com de Crise"
+    override val agentIdentifier: String = "Agent Ra�©putation & Com de Crise"
     override val authorityLevel: Int = 4
-    override val domain: String = "DIGITAL_PR"
+    override val agentDomain: String = "DIGITAL_PR"
 
     override suspend fun dispatch(command: Command) {
-        log("Analyse de l'image de marque pour : ${command.instruction}")
+        log("Analyse de l'image de marque pour : " + command.instruction)
         
-        val strategy = thinkAndAct("""
-            Contexte : ${command.instruction}
-            Tâche : Analyse les risques de réputation en utilisant les outils d'écoute sociale et prépare une réponse officielle protectrice.
-        """.trimIndent())
+        val strategy = performAction("Contexte : " + command.instruction + 
+            "\nTa�¢che : Analyse les risques de ra�©putation en utilisant les outils d'a�©coute sociale et pra�©pare une ra�©ponse officielle protectrice.")
         
-        log("Stratégie de défense générée : $strategy")
+        log("Strata�©gie de da�©fense ga�©na�©ra�©e : " + strategy)
         report(createReport(command, ReportStatus.SUCCESS, strategy))
     }
 
@@ -34,8 +32,5 @@ class DigitalReputationAgent(
         commandChain.report(result)
     }
 }
-
-
-
 
 

@@ -1,27 +1,35 @@
 package com.example.the100tral.core.monitor
 
 import com.example.the100tral.core.contract.AgentThought
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 object ThoughtMonitor {
-    val thoughts = mutableListOf<AgentThought>() // Ouvert pour l'UI
-    private var summary: String = "PrÃªt pour l'action."
-    private var persistenceListener: ((AgentThought) -> Unit)? = null
+    private val _thoughts = MutableStateFlow<List<AgentThought>>(emptyList())
+    val thoughts: StateFlow<List<AgentThought>> = _thoughts.asStateFlow()
 
-    fun setPersistenceListener(listener: (AgentThought) -> Unit) {
-        this.persistenceListener = listener
-    }
+    private val _lastResultSummary = MutableStateFlow("SystÃ¨me prÃªt.")
+    val lastResultSummary: StateFlow<String> = _lastResultSummary.asStateFlow()
 
-    fun updateThought(agentName: String, domain: String, message: String) {
-        val thought = AgentThought(agentName, domain, message)
-        thoughts.add(0, thought)
-        persistenceListener?.invoke(thought)
+    /**
+     * @param isDialogue Si TRUE, s'affiche dans le Chatbot. Si FALSE, uniquement dans le Journal.
+     */
+    fun updateThought(id: String, domain: String, msg: String, isDialogue: Boolean = false) {
+        val newThought = AgentThought(
+            agentName = id, 
+            domain = domain, 
+            message = msg, 
+            isDialogue = isDialogue,
+            timestamp = System.currentTimeMillis()
+        )
+        val currentList = _thoughts.value.toMutableList()
+        currentList.add(0, newThought)
+        _thoughts.value = currentList.take(200)
     }
 
     fun updateSummary(newSummary: String) {
-        summary = newSummary
+        _lastResultSummary.value = newSummary
     }
-
-    fun getSummary(): String = summary
-    fun getRecentThoughts(): List<AgentThought> = thoughts.take(50)
 }
 

@@ -2,7 +2,6 @@ package com.example.the100tral.platform.departments.marketing.sub
 
 import com.example.the100tral.core.contract.*
 import com.example.the100tral.core.ai.LLMService
-
 import com.example.the100tral.core.persistence.MemoryStorage
 
 class CrawlerAgent(
@@ -10,13 +9,13 @@ class CrawlerAgent(
     llmService: LLMService? = null,
     memoryStorage: MemoryStorage? = null
 ) : BaseAgent(llmService, memoryStorage) {
-    override val name: String = "Agent Crawler & Scrapping"
+    override val agentIdentifier: String = "Agent Crawler & Scrapping"
     override val authorityLevel: Int = 4
-    override val domain: String = "CRAWLER"
+    override val agentDomain: String = "CRAWLER"
 
     override suspend fun dispatch(command: Command) {
-        log("Exploration et scrapping (Deep Web Légal)...")
-        val thought = think("Simule une extraction de données et une veille concurrentielle pour : ${command.instruction}")
+        log("Exploration et scrapping (Deep Web La�©gal)...")
+        val thought = performAction("Simule une extraction de donna�©es et une veille concurrentielle pour : " + command.instruction)
         report(createReport(command, ReportStatus.SUCCESS, thought))
     }
 
@@ -24,8 +23,5 @@ class CrawlerAgent(
         commandChain.report(result)
     }
 }
-
-
-
 
 

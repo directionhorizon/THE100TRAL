@@ -2,46 +2,44 @@ package com.example.the100tral.core.contract
 
 import com.example.the100tral.core.ai.LLMService
 import com.example.the100tral.core.persistence.MemoryStorage
-import com.example.the100tral.core.monitor.ThoughtMonitor
 import com.example.the100tral.core.tool.ITool
 
 abstract class BaseAgent(
-    protected val llmService: LLMService?,
-    protected val memoryStorage: MemoryStorage?
-) : IAgent {
+    open val llmService: LLMService? = null,
+    open val memoryStorage: MemoryStorage? = null
+) : AgentData {
 
-    protected val tools = mutableMapOf<String, ITool>()
+    override var preferredModel: String = "GEMINI"
+    val tools: MutableMap<String, ITool> = mutableMapOf()
 
     fun registerTool(tool: ITool) {
         tools[tool.toolName] = tool
     }
 
-    protected fun log(message: String) {
-        println("[$name] $message")
-        ThoughtMonitor.updateThought(name, domain, message)
+    protected fun log(message: String, isDialogue: Boolean = false) {
+        AgentUtils.log(agentIdentifier, agentDomain, message, isDialogue)
     }
 
-    // Fonction "think" rÃ©clamÃ©e par les agents
-    protected suspend fun think(task: String): String {
-        return thinkAndAct(task)
+    /**
+     * REFLEXION AVEC GESTION DES FICHIERS JOINTS (TROMBONE).
+     */
+    protected suspend fun performAction(task: String, attachments: List<String> = emptyList()): String {
+        var fullPrompt = task
+        if (attachments.isNotEmpty()) {
+            fullPrompt += "\n[ANALYSE DE DOCUMENTS JOINTS] : " + attachments.joinToString(", ")
+        }
+        return llmService?.performAction(fullPrompt, providerKey = preferredModel) ?: "IA non disponible."
     }
 
-    protected suspend fun thinkAndAct(task: String): String {
-        val toolDescription = tools.values.joinToString("\n") { "- ${it.toolName}: ${it.description}" }
-        val prompt = "Mission: $task\nOutils: $toolDescription"
-        return llmService?.think(prompt) ?: "IA hors ligne."
-    }
-
-    // Fonction "publish" rÃ©clamÃ©e par certains services
-    protected fun publish(message: String) {
-        log("Publication: $message")
+    protected fun createReport(command: Command, status: ReportStatus, message: String, data: Map<String, String> = emptyMap()): Report {
+        return Report(command.id, status, message, agentDomain, data)
     }
 
     open suspend fun dispatch(command: Command) {
-        log("Commande reÃ§ue: ${command.instruction}")
+        log("Instruction : " + command.instruction)
     }
 
     open suspend fun report(result: Report) {
-        log("Rapport: ${result.message}")
+        log("Rapport du pole : " + result.agentDomain)
     }
 }

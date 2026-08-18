@@ -16,6 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.the100tral.core.monitor.ThoughtMonitor
 
+import androidx.compose.foundation.*
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.Alignment
+
 @Composable
 fun DashboardScreen() {
     val thoughts by ThoughtMonitor.thoughts.collectAsState()
@@ -34,14 +38,24 @@ fun DashboardScreen() {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(thoughts) { thought ->
-                ThoughtItem(thought)
+        val listState = rememberLazyListState()
+        Box(modifier = Modifier.weight(1f)) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(thoughts) { thought ->
+                    ThoughtItem(thought)
+                }
             }
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(scrollState = listState)
+            )
         }
     }
 }
+
+
 

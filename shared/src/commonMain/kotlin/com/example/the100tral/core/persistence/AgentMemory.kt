@@ -19,3 +19,5 @@ data class PlatformMemory(
     val entries: MutableList<MemoryEntry> = mutableListOf()
 )
 
+
+

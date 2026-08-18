@@ -5,8 +5,8 @@ import com.example.the100tral.core.ai.LLMService
 import com.example.the100tral.core.persistence.MemoryStorage
 
 /**
- * Pôle Produit (Niveau 3).
- * Gère le cycle de vie logiciel, du code à la mise en production.
+ * Pôle Produit (DEV) - VERSION OPÉRATIONNELLE.
+ * S'auto-développe en fonction des besoins techniques détectés.
  */
 class ProductDevelopmentDepartment(
     private val commandChain: BaseAgent,
@@ -14,27 +14,20 @@ class ProductDevelopmentDepartment(
     memoryStorage: MemoryStorage? = null
 ) : BaseAgent(llmService, memoryStorage) {
     
-    override val name: String = "Pôle Produit"
+    override val agentIdentifier: String = "Pôle Produit (DEV)"
     override val authorityLevel: Int = 3
-    override val domain: String = "PRODUCT_DEV"
-
-    private val subAgents = mutableMapOf<String, BaseAgent>()
-
-    fun registerSubAgent(domain: String, agent: BaseAgent) {
-        subAgents[domain] = agent
-        log("Sous-agent produit enregistré : $domain")
-    }
+    override val agentDomain: String = "PRODUCT_DEV"
 
     override suspend fun dispatch(command: Command) {
-        log("Réception d'une mission de développement : ${command.instruction}")
+        log("Analyse des besoins techniques pour : " + command.instruction)
         
-        // Délégation intelligente : on transmet l'ordre à tous les sous-agents concernés
-        subAgents.values.forEach { it.dispatch(command) }
+        val techAnalysis = performAction("ANALYSE DEV : En tant que lead dev, définis les nouvelles compétences ou agents techniques nécessaires pour réaliser : " + command.instruction)
+        
+        val report = createReport(command, ReportStatus.SUCCESS, "PROPOSITION TECHNIQUE :\n" + techAnalysis)
+        commandChain.report(report)
     }
 
     override suspend fun report(result: Report) {
-        log("Rapport technique reçu (${result.status}). Remontée au Manager.")
         commandChain.report(result)
     }
 }
-

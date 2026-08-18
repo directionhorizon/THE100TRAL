@@ -24,3 +24,5 @@ class LocalIntelligenceTool(private val tavilyService: TavilyService) : ITool {
     }
 }
 
+
+

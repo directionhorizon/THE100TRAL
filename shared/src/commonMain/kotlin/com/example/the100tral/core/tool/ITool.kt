@@ -19,3 +19,5 @@ data class ToolResult(
     val data: Map<String, Any> = emptyMap()
 )
 
+
+

@@ -20,7 +20,7 @@ open class LLMService {
     /**
      * Fait réfléchir l'agent en utilisant le fournisseur spécifié ou celui par défaut.
      */
-    suspend fun think(prompt: String, providerKey: String? = null): String {
+    suspend fun performAction(prompt: String, providerKey: String? = null): String {
         val safePrompt = SecurityGuard.filterInput(prompt)
         
         val key = providerKey ?: defaultProvider
@@ -36,4 +36,6 @@ open class LLMService {
 
     fun getAvailableProviders(): List<String> = providers.keys.toList()
 }
+
+
 
