@@ -1,0 +1,86 @@
+{
+  "name": "THE 100TRAL - Système Nerveux Central",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "empire-command",
+        "options": {}
+      },
+      "name": "Webhook Directeur",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "Filtre Secrétariat OK"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Filtre Secrétaire",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook Directeur\"].json[\"body\"][\"target\"]}}",
+              "value2": "MARKETING"
+            }
+          ]
+        }
+      },
+      "name": "Routeur Chef de Projet",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "upload",
+        "fileContent": "={{$node[\"Webhook Directeur\"].json[\"body\"][\"content\"]}}",
+        "fileName": "Rapport_Empire.txt"
+      },
+      "name": "Google Drive (Archivage)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [900, 200]
+    }
+  ],
+  "connections": {
+    "Webhook Directeur": {
+      "main": [
+        [
+          {
+            "node": "Filtre Secrétaire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtre Secrétaire": {
+      "main": [
+        [
+          {
+            "node": "Routeur Chef de Projet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
