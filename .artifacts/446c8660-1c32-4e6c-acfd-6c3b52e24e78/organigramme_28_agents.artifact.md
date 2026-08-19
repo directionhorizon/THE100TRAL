@@ -1,4 +1,4 @@
-# Organigramme Officiel THE 100TRAL (28 Agents)
+# Organigramme Officiel THE 100TRAL (25 Agents)
 
 ## Management Central (4 agents)
 1.  **Directeur** (Super-Orchestrateur)
@@ -6,7 +6,7 @@
 3.  **Chef de Projet (PM)** (RÃ©partition des tÃ¢ches)
 4.  **Agent QualitÃ©** (Validation technique)
 
-## PÃ´les OpÃ©rationnels (24 spÃ©cialistes)
+## PÃ´les OpÃ©rationnels (21 spÃ©cialistes)
 
 ### 1. PÃ´le Marketing (5)
 5.  Social Listener (Veille, Culture & Trends)
@@ -40,10 +40,3 @@
 ### 6. PÃ´le AcadÃ©mique (2)
 24. Expert Recherche
 25. Expert RÃ©daction
-
-### 7. PÃ´le Juridique (2)
-26. Expert Juridique
-27. Gestionnaire de Contrats
-
-### 8. PÃ´le Logistique (1)
-28. Gestionnaire des Flux
