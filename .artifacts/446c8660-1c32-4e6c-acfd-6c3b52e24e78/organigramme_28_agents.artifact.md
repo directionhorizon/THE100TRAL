@@ -1,54 +1,49 @@
 # Organigramme Officiel THE 100TRAL (28 Agents)
 
-## Niveau 0 : Direction
-*   **Directeur (Super-Orchestrateur)**
+## Management Central (4 agents)
+1.  **Directeur** (Super-Orchestrateur)
+2.  **SecrÃ©taire** (Pivot Direction/ExÃ©cution)
+3.  **Chef de Projet (PM)** (RÃ©partition des tÃ¢ches)
+4.  **Agent QualitÃ©** (Validation technique)
 
-## Niveau 1 : Management & Flux
-*   **SecrÃ©taire** (Pivot Direction/ExÃ©cution)
-*   **Chef de Projet (PM)** (RÃ©partition des tÃ¢ches)
+## PÃ´les OpÃ©rationnels (24 spÃ©cialistes)
 
-## Niveau 2 : ContrÃ´le
-*   **Agent QualitÃ©** (Validation technique)
+### 1. PÃ´le Marketing (5)
+5.  Social Listener (Veille, Culture & Trends)
+6.  Agent PublicitÃ©
+7.  Agent Visuel Marketing
+8.  Agent Data Marketing
+9.  Agent RÃ©putation
 
-## Niveau 3 : PÃ´les OpÃ©rationnels (25 SpÃ©cialistes)
+### 2. PÃ´le Commercial (4)
+10. Lead Hunter
+11. Customer Success (SAV / Support Technique)
+12. Agent NÃ©gociation
+13. Agent Partenariats (Ventes)
 
-### 1. PÃ´le Marketing (5 agents)
-*   Social Listener (Veille, Culture & Trends)
-*   Agent PublicitÃ©
-*   Agent Visuel Marketing
-*   Agent Data Marketing
-*   Agent RÃ©putation
+### 3. PÃ´le DÃ‰VELOPPEMENT (4)
+14. Lead Developer
+15. Agent Backend
+16. Agent Frontend
+17. Agent DevOps
 
-### 2. PÃ´le Commercial & Ventes (5 agents)
-*   Lead Hunter
-*   Customer Success (SAV / Support Technique)
-*   Agent NÃ©gociation
-*   Agent Partenariats
-*   Agent Commercial Terrain
+### 4. PÃ´le Audit & Finance (3)
+18. Analyste Financier (ROI)
+19. Agent Audit (ConformitÃ©)
+20. Expert Fiscal
 
-### 3. PÃ´le DÃ‰VELOPPEMENT (Produit) (4 agents)
-*   Lead Developer
-*   Agent Backend
-*   Agent Frontend
-*   Agent DevOps
+### 5. PÃ´le Relation Presse (3)
+21. Agent Presse
+22. Agent Communication de Crise
+23. Storyteller
 
-### 4. PÃ´le Audit & Finance (3 agents)
-*   Analyste Financier (ROI)
-*   Agent Audit (ConformitÃ©)
-*   Expert Fiscal
+### 6. PÃ´le AcadÃ©mique (2)
+24. Expert Recherche
+25. Expert RÃ©daction
 
-### 5. PÃ´le Relation Presse (3 agents)
-*   Agent Presse
-*   Agent Communication de Crise
-*   Storyteller
+### 7. PÃ´le Juridique (2)
+26. Expert Juridique
+27. Gestionnaire de Contrats
 
-### 6. PÃ´le AcadÃ©mique (2 agents)
-*   Expert Recherche
-*   Expert RÃ©daction
-
-### 7. PÃ´le Juridique (2 agents)
-*   Expert Juridique
-*   Gestionnaire de Contrats
-
-### 8. PÃ´le Logistique (1 agent)
-*   Gestionnaire des Flux
+### 8. PÃ´le Logistique (1)
+28. Gestionnaire des Flux
